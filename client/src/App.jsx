@@ -4,12 +4,12 @@ import Header from './components/Header'
 import UserList from './components/UserList'
 
 function App() {
-
+ 
   return (
     <>
-      {/* Header component */}
+    
       <Header />
-      {/* Main component  */}
+   
       <main className="main">
         <UserList />
         
@@ -191,4 +191,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

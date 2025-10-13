@@ -1,5 +1,6 @@
 export default function UserListItem(){
     return(
+      <>
         <tr>
                   <td>
                     <img
@@ -67,5 +68,6 @@ export default function UserListItem(){
                     </button>
                   </td>
                 </tr>
+                </>
     )
 }
