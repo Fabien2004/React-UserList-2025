@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-
 import userService from "../services/userService";
-
+import UserCreate from "./UserCreate";
 import UserListItem from "./UserListItem";
 import Pagination from "./Pagination";
 import Search from "./Search";
@@ -9,6 +8,7 @@ import Search from "./Search";
 
 export default function UserList() {
   const [users, setUsers] = useState([])
+  const [showCreateUser, setShowCreateUser] = useState(false);
   useEffect(() => {
       userService.getAll()
       .then(result => {
@@ -16,11 +16,17 @@ export default function UserList() {
       });
   }, []);
 
+  const cliclkHandler = () => {
+     setShowCreateUser(true);
+  }
+
   return (
     <>
       <section className="card users-container">
         <Search />
+        {showCreateUser && <UserCreate />}
         <div className="table-wrapper">
+          <div>
             {/* Overlap components  */}
             {/* <div class="loading-shade"> */}
             {/* Loading spinner  */}
@@ -64,6 +70,7 @@ export default function UserList() {
         </svg>
         <h2>Failed to fetch</h2>
       </div> */}
+      </div>
           
 
           <table className="table">
@@ -169,7 +176,7 @@ export default function UserList() {
           </table>
         </div>
        
-        <button className="btn-add btn">Add new user</button>
+        <button className="btn-add btn" onClick={cliclkHandler}>Add new user</button>
        
         <Pagination />
       </section>
