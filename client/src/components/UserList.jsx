@@ -22,12 +22,25 @@ export default function UserList() {
   const closeClickHandler = () => {
     setShowCreateUser(false);
   }
+  const saveCreateHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const userData = Object.fromEntries(formData);
+
+    const newUser = await userService.create(userData);
+
+    setUsers(state => [...state, newUser]);
+    setShowCreateUser(false);
+  }
 
   return (
     <>
       <section className="card users-container">
         <Search />
-        {showCreateUser && <UserCreate onClose={closeClickHandler} />}
+        {showCreateUser && <UserCreate
+         onClose={closeClickHandler}
+         onSave={saveCreateHandler}
+         />}
         <div className="table-wrapper">
           <div>
             {/* Overlap components  */}
