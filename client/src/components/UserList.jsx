@@ -10,7 +10,7 @@ import Search from "./Search";
 export default function UserList() {
   const [users, setUsers] = useState([])
   const [showCreateUser, setShowCreateUser] = useState(false);
-  const [userIdInfo, setUserIdInfo] = useState();
+  const [userIdInfo, setUserIdInfo] = useState(null);
 
   useEffect(() => {
       userService.getAll()
@@ -38,6 +38,9 @@ export default function UserList() {
   const infoClickHandler = (userId) => {
     setUserIdInfo(userId);
   }
+  const infoClickCloseHandler = () => {
+    setUserIdInfo(null);
+  }
 
   return (
     <>
@@ -51,6 +54,7 @@ export default function UserList() {
          {userIdInfo && (
           <UserInfo 
           userId={userIdInfo}
+          onClose={infoClickCloseHandler}
          />
          )}
        
