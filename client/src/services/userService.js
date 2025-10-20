@@ -7,13 +7,22 @@ export default {
         const users = Object.values(result);
         return users;
     },
+
+    async getOne(userId) {
+        const response = await fetch(`${baseUrl}/${userId}`);
+        const user = await response.json();
+        return user;
+    },
+ 
     async create(userData) {
-        const {country, city, street, streetNumber, postData} = userData;
+        const { country, city, street, streetNumber } = userData;
 
-        postData.adress = {country, city, street, streetNumber}; 
-        postData.createdAt = new Date().toIsOString();
-        postData.updatedAt = new Date().toIsOString();
-
+        const postData = {
+            ...userData,
+            address: { country, city, street, streetNumber },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
         const response = await fetch(baseUrl, {
             method: 'POST',
@@ -22,7 +31,7 @@ export default {
             },
             body: JSON.stringify(postData)
         });
-        const result = await response.json();
-        return result;
+
+        return await response.json();
     }
-}
+};

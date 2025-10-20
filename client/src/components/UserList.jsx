@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import userService from "../services/userService";
 import UserCreate from "./UserCreate";
+import UserInfo from "./UserInfo"
 import UserListItem from "./UserListItem";
 import Pagination from "./Pagination";
 import Search from "./Search";
@@ -9,6 +10,8 @@ import Search from "./Search";
 export default function UserList() {
   const [users, setUsers] = useState([])
   const [showCreateUser, setShowCreateUser] = useState(false);
+  const [userIdInfo, setUserIdInfo] = useState();
+
   useEffect(() => {
       userService.getAll()
       .then(result => {
@@ -32,6 +35,9 @@ export default function UserList() {
     setUsers(state => [...state, newUser]);
     setShowCreateUser(false);
   }
+  const infoClickHandler = (userId) => {
+    setUserIdInfo(userId);
+  }
 
   return (
     <>
@@ -41,6 +47,13 @@ export default function UserList() {
          onClose={closeClickHandler}
          onSave={saveCreateHandler}
          />}
+
+         {userIdInfo && (
+          <UserInfo 
+          userId={userIdInfo}
+         />
+         )}
+       
         <div className="table-wrapper">
           <div>
             {/* Overlap components  */}
@@ -187,7 +200,10 @@ export default function UserList() {
               </tr>
             </thead>
             <tbody>
-              {users.map(user => <UserListItem key={user._id} {...user}/>)}
+              {users.map(user => <UserListItem
+               key={user._id}
+               onInfoClick={infoClickHandler}
+                {...user}/>)}
             </tbody>
           </table>
         </div>
