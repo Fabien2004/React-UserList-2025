@@ -33,5 +33,11 @@ export default {
         });
 
         return await response.json();
-    }
+    },
+    async delete(userId) {
+        const response = await fetch(`${baseUrl}/${userId}`,{
+            method: 'DELETE'
+        });
+        return await response.json();
+    },
 };

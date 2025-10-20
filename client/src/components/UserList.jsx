@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import userService from "../services/userService";
 import UserCreate from "./UserCreate";
+import UserDelete from "./UserDelete";
 import UserInfo from "./UserInfo"
 import UserListItem from "./UserListItem";
 import Pagination from "./Pagination";
@@ -11,6 +12,7 @@ export default function UserList() {
   const [users, setUsers] = useState([])
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [userIdInfo, setUserIdInfo] = useState(null);
+  const [userDelete, setUserDelete] = useState(null);
 
   useEffect(() => {
       userService.getAll()
@@ -41,7 +43,20 @@ export default function UserList() {
   const infoClickCloseHandler = () => {
     setUserIdInfo(null);
   }
+   const userDeleteClickHandler = (userId) => {
+    setUserDelete(userId);
+   }
+   const userDeleteCloseHandler = () => {
+    setUserDelete(null);
+   }
+   const userDeleteHandler = async () => {
+    await userService.delete(userDelete);
 
+    setUsers(state => state.filter(user => user._id !== userDelete));
+
+    setUserDelete(null);
+
+   }
   return (
     <>
       <section className="card users-container">
@@ -57,6 +72,12 @@ export default function UserList() {
           onClose={infoClickCloseHandler}
          />
          )}
+          {userDelete && (
+            <UserDelete
+             onClose={userDeleteCloseHandler} 
+             onDelete={userDeleteHandler}
+             />
+        )}
        
         <div className="table-wrapper">
           <div>
@@ -207,6 +228,7 @@ export default function UserList() {
               {users.map(user => <UserListItem
                key={user._id}
                onInfoClick={infoClickHandler}
+               onDeleteClick={userDeleteClickHandler}
                 {...user}/>)}
             </tbody>
           </table>
