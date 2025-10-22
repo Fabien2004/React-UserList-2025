@@ -13,72 +13,104 @@ export default function UserList() {
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [userIdInfo, setUserIdInfo] = useState(null);
   const [userDelete, setUserDelete] = useState(null);
+  const [userEdit, setUserEdit] = useState(null);
+  
+  const wait = (time) =>
+     new Promise((resolve)=>{
+        setTimeout(() =>{
+          resolve('Wait is over!');
+        }, time);
+     });
 
   useEffect(() => {
-      userService.getAll()
+    userService.getAll()
       .then(result => {
-          setUsers(result)
+        setUsers(result)
       });
   }, []);
 
   const createClickHandler = () => {
-     setShowCreateUser(true);
-  }
+    setShowCreateUser(true);
+  };
   const closeClickHandler = () => {
     setShowCreateUser(false);
-  }
+    setUserEdit(null);
+  };
   const saveCreateHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.target.parentElement.parentElement);
     const userData = Object.fromEntries(formData);
 
     const newUser = await userService.create(userData);
 
     setUsers(state => [...state, newUser]);
     setShowCreateUser(false);
-  }
+    
+  };
   const infoClickHandler = (userId) => {
     setUserIdInfo(userId);
-  }
+  };
   const infoClickCloseHandler = () => {
     setUserIdInfo(null);
-  }
-   const userDeleteClickHandler = (userId) => {
+  };
+  const userDeleteClickHandler = (userId) => {
     setUserDelete(userId);
-   }
-   const userDeleteCloseHandler = () => {
+  };
+  const userDeleteCloseHandler = () => {
     setUserDelete(null);
-   }
-   const userDeleteHandler = async () => {
+  };
+  const userDeleteHandler = async () => {
     await userService.delete(userDelete);
 
     setUsers(state => state.filter(user => user._id !== userDelete));
 
     setUserDelete(null);
 
-   }
+
+  };
+  const userEditClickHandler = (userId) => {
+    setUserEdit(userId);
+  };
+  const saveEditedUserHandler = async (e) => {
+    const userId = userEdit;
+    e.preventDefault();
+    const formData = new FormData(e.target.parentElement.parentElement);
+    const userData = Object.fromEntries(formData);
+    const updatedUser = await userService.update(userId, userData);
+    setUsers(state => state.map(user => user._id === userId ? updatedUser : user));
+    setUserEdit(null);
+  };
   return (
     <>
       <section className="card users-container">
         <Search />
         {showCreateUser && <UserCreate
-         onClose={closeClickHandler}
-         onSave={saveCreateHandler}
-         />}
+          onClose={closeClickHandler}
+          onSave={saveCreateHandler}
+        />}
 
-         {userIdInfo && (
-          <UserInfo 
-          userId={userIdInfo}
-          onClose={infoClickCloseHandler}
-         />
-         )}
-          {userDelete && (
-            <UserDelete
-             onClose={userDeleteCloseHandler} 
-             onDelete={userDeleteHandler}
-             />
+        {userIdInfo && (
+          <UserInfo
+            userId={userIdInfo}
+            onClose={infoClickCloseHandler}
+          />
         )}
-       
+        {userDelete && (
+          <UserDelete
+            onClose={userDeleteCloseHandler}
+            onDelete={userDeleteHandler}
+          />
+        )}
+        {userEdit && (
+          <UserCreate
+          userId={userEdit}
+          onClose={closeClickHandler}
+          onSave={saveCreateHandler}
+          onEdit={saveEditedUserHandler}
+        />
+      )}
+        
+
         <div className="table-wrapper">
           <div>
             {/* Overlap components  */}
@@ -124,8 +156,8 @@ export default function UserList() {
         </svg>
         <h2>Failed to fetch</h2>
       </div> */}
-      </div>
-          
+          </div>
+
 
           <table className="table">
             <thead>
@@ -226,16 +258,17 @@ export default function UserList() {
             </thead>
             <tbody>
               {users.map(user => <UserListItem
-               key={user._id}
-               onInfoClick={infoClickHandler}
-               onDeleteClick={userDeleteClickHandler}
-                {...user}/>)}
+                key={user._id}
+                onInfoClick={infoClickHandler}
+                onDeleteClick={userDeleteClickHandler}
+                onEditClick={userEditClickHandler}
+                {...user} />)}
             </tbody>
           </table>
         </div>
-       
+
         <button className="btn-add btn" onClick={createClickHandler}>Add new user</button>
-       
+
         <Pagination />
       </section>
     </>
