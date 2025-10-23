@@ -11,7 +11,7 @@ export default function Search({ onSearch }) {
 
   const handleClear = () => {
     setSearchText("");
-    onSearch("", ""); // reset results
+    onSearch("", ""); 
   };
 
   return (

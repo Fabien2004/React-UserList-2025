@@ -4,7 +4,6 @@ import UserCreate from "./UserCreate";
 import UserDelete from "./UserDelete";
 import UserInfo from "./UserInfo";
 import UserListItem from "./UserListItem";
-import Pagination from "./Pagination";
 import Search from "./Search";
 
 export default function UserList() {
@@ -24,7 +23,7 @@ export default function UserList() {
     });
   }, []);
 
-  // 🟦 Local search/filter handler
+  // Local search/filter handler
   const handleSearch = (text, criteria) => {
     if (!text || !criteria) {
       setFilteredUsers(users);
@@ -40,7 +39,7 @@ export default function UserList() {
     setFilteredUsers(filtered);
   };
 
-  // 🟩 CRUD handlers (same as before)
+  // CRUD handlers (same as before)
   const createClickHandler = () => setShowCreateUser(true);
   const closeClickHandler = () => {
     setShowCreateUser(false);
@@ -90,10 +89,10 @@ export default function UserList() {
 
   return (
     <section className="card users-container">
-      {/* 🔍 SEARCH BAR */}
+      {/*  SEARCH BAR */}
       <Search onSearch={handleSearch} />
 
-      {/* 🟦 Create, Info, Delete, Edit modals */}
+      {/*  Create, Info, Delete, Edit modals */}
       {showCreateUser && (
         <UserCreate onClose={closeClickHandler} onSave={saveCreateHandler} />
       )}
@@ -114,7 +113,7 @@ export default function UserList() {
         />
       )}
 
-      {/* 🧾 Table */}
+      {/* Table */}
       <div className="table-wrapper">
         <table className="table">
           <thead>
@@ -153,8 +152,6 @@ export default function UserList() {
       <button className="btn-add btn" onClick={createClickHandler}>
         Add new user
       </button>
-
-      <Pagination />
     </section>
   );
 }
